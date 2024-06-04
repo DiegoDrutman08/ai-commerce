@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+    Detalle del Producto: {{ object.nombre }}
+{% endblock title %}
+
+{% block content %}
+    {% include 'core/components/navbar.html' %}
+    <header class="masthead">
+        <div class="container">
+            <div class="masthead-subheading">Explora, edita o elimina productos por categorías</div>
+            <h1 class="masthead-heading text-uppercase">Productos</h1>
+        </div>
+    </header>
+    <div class="container my-5">
+        <h1 class="display-4">Detalle del Producto</h1>
+        <div class="card mt-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{ producto.imagen.url }}" class="img-fluid rounded-start" alt="{{ producto.nombre }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Categoría: {{ producto.categoria }}</h5>
+                        <p class="card-text">Nombre: {{ producto.nombre }}</p>
+                        <p class="card-text">Teléfono: {{ producto.telefono }}</p>
+                        <p class="card-text">Email: {{ producto.email }}</p>
+                        <p class="card-text">Descripción: {{ producto.descripcion }}</p>
+                        <p class="card-text"><small class="text-muted">Última actualización: {{ producto.fecha_actualizacion }}</small></p>
+                        <a href="{% url 'core:categorias' %}" class="btn btn-secondary btn-lg">Volver al Inicio de Producto</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'core:about_me' %}">AICommerce Business</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item" style="margin-right: 20px;">
+                    <a class="nav-link" href="{% url 'core:home' %}" style="font-size: 18px;">Inicio</a>
+                </li>
+                <li class="nav-item" style="margin-right: 20px;">
+                    <a class="nav-link" href="{% url 'core:categorias' %}" style="font-size: 18px;">Categorías</a>
+                </li>
+                <li class="nav-item" style="margin-right: 20px;">
+                    <a class="nav-link" href="{% url 'core:contacto' %}" style="font-size: 18px;">Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'core:login' %}" style="font-size: 18px;">Staff</a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+<script>
+    // Selecciona el navbar
+    var navbar = document.getElementById("mainNav");
+
+    // Guarda la posición actual de la página
+    var lastScrollTop = 0;
+
+    // Añade un evento de desplazamiento a la ventana
+    window.addEventListener("scroll", function() {
+        // Obtiene la posición actual de la página
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Verifica si el desplazamiento es hacia abajo y si la distancia recorrida es mayor a 100px
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+            // Oculta el navbar
+            navbar.classList.add("navbar-hidden");
+        } else {
+            // Muestra el navbar
+            navbar.classList.remove("navbar-hidden");
+        }
+
+        // Actualiza la última posición de desplazamiento
+        lastScrollTop = scrollTop;
+    });
+</script>
+
+<style>
+
+        /* Estilo para el tamaño de las letras del navbar */
+        .navbar-nav .nav-link {
+            font-size: 18px; /* Ajusta el tamaño de la letra según tus preferencias */
+        }
+    /* Estilo para ocultar el navbar */
+    .navbar-hidden {
+        transform: translateY(-100%);
+        transition: transform 0.5s ease-in-out;
+    }
+</style>

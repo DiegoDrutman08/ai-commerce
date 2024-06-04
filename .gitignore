@@ -1,0 +1,7 @@
+# Archivos y directorios generales
+/config/*.local
+/node_modules
+/.vscode
+/.idea
+.DS_Store
+.env
