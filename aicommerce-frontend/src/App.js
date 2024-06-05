@@ -1,23 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import ProductPage from './pages/ProductPage'; // Crear esta página más adelante
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/navbar';
+import ProductPage from './components/ProductPage';
+import Footer from './components/footer';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
-        <main>
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/products" component={ProductPage} />
-            {/* Agregar más rutas según sea necesario */}
-          </Switch>
-        </main>
+        <Navbar />
+        <Routes>
+          <Route path="/products/:productId" element={<ProductPage />} />
+        </Routes>
         <Footer />
       </div>
     </Router>
