@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Registro de Empresa - AICommerce
+{% endblock %}
+
+{% block content %}
+{% include 'core/components/navbar.html' %}
+    <header class="masthead">
+        <div class="container">
+            <div class="masthead-heading text-uppercase">¡Bienvenido a AICommerce Business!</div>
+            <div class="masthead-subheading">Tu plataforma de comercio electrónico personalizable</div>
+        </div>
+    </header>
+    <section class="page-section bg-light" id="registro">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <h2 class="section-heading text-uppercase">Registro de Empresa</h2>
+                        <h3 class="section-subheading text-muted">Completa los campos para registrar tu empresa.</h3>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Registrar nueva empresa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

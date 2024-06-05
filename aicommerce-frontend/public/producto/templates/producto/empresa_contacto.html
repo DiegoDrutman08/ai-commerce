@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+    Empresas: Detalle de un Empresa
+{% endblock title %}
+
+{% block content %}
+{% include 'producto/components/navbar_producto.html' %}
+<header class="masthead">
+    <div class="container">
+        <div class="masthead-subheading">Crealos, editalos o borralos por categorias</div>
+        <h1 class="masthead-heading text-uppercase">Empresas</h1>
+    </div>
+</header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="mt-4">Empresas</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'empresa:home' %}">Empresas</a></li>
+                    <li class="breadcrumb-item active">Detalle de Empresa</li>
+                </ol>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Detalles de la Empresa
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">{{ object.nombre }}</h2>
+                        <ul>
+                            <li><strong>Teléfono:</strong> {{ object.telefono }}</li>
+                            <li><strong>Email:</strong> {{ object.email }}</li>
+                            <li><strong>Descripción:</strong> {{ object.descripcion }}</li>
+                            <li><strong>Fecha de actualización:</strong> {{ object.fecha_actualizacion }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="{% url 'empresa:home' %}" class="btn btn-secondary">Volver al inicio de Empresa</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
