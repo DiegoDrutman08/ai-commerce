@@ -1,10 +1,9 @@
 import React from 'react';
-import NavBar from './Navbar';
+import BaseLayout from './BaseLayout';
 
 function About() {
   return (
-    <div>
-      <NavBar />
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-heading text-uppercase">AICommerce Business</div>
@@ -26,7 +25,7 @@ function About() {
           </div>
         </div>
       </section>
-    </div>
+    </BaseLayout>
   );
 }
 

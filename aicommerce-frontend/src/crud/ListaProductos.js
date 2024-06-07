@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BaseLayout from './BaseLayoutC';
 
 function ListaProductos({ productos }) {
   return (
-    <div>
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-subheading">Crealos, editalos o borralos por categorías</div>
@@ -46,7 +47,7 @@ function ListaProductos({ productos }) {
           <Link className="btn btn-secondary btn-lg text-uppercase" to="/principal">Volver al inicio de Producto</Link>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

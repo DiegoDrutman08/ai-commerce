@@ -1,8 +1,9 @@
 import React from 'react';
+import BaseLayout from './BaseLayoutC';
 
 function FormularioCategoria({ onSubmit, form }) {
   return (
-    <div>
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-subheading">Crea, edita o elimina productos por categorías</div>
@@ -26,7 +27,7 @@ function FormularioCategoria({ onSubmit, form }) {
           <a href="/principal" className="btn btn-secondary btn-lg text-uppercase mt-2">Volver al inicio de Producto</a>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

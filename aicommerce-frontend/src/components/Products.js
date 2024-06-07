@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import NavBar from './Navbar';  // Asegúrate de que el componente NavBar está correctamente importado
+import BaseLayout from './BaseLayout';
 
 function Productos({ producto }) {
   return (
-    <div>
-      <NavBar />
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-subheading">Explora, edita o elimina productos por categorías</div>
@@ -35,7 +34,7 @@ function Productos({ producto }) {
           </div>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

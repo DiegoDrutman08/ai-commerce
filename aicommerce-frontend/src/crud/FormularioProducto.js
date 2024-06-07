@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BaseLayout from './BaseLayoutC';
 
 function FormularioProducto({ form }) {
   return (
-    <div>
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-subheading">Crea, edítalos o bórralos por categorías</div>
@@ -22,7 +23,7 @@ function FormularioProducto({ form }) {
           <Link to="/principal" className="btn btn-secondary btn-lg text-uppercase float-left mt-2">Volver al inicio de Producto</Link>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

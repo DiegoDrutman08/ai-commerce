@@ -1,10 +1,9 @@
 import React from 'react';
-import NavBar from './Navbar';
+import BaseLayout from './BaseLayout';
 
 function Categorias({ categoriasConProductos }) {
   return (
-    <div>
-      <NavBar />
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-heading text-uppercase">Categorías disponibles</div>
@@ -44,7 +43,7 @@ function Categorias({ categoriasConProductos }) {
           </div>
         </div>
       </section>
-    </div>
+    </BaseLayout>
   );
 }
 

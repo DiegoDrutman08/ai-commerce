@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BaseLayout from './BaseLayoutC';
 
 function Principal() {
   return (
-    <div>
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-subheading">Crea, edita o elimina productos por categorías</div>
@@ -23,7 +24,7 @@ function Principal() {
           <Link to="/listaproductos" className="btn btn-outline-success btn-lg" role="button">Listar Productos</Link>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

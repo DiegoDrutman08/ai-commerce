@@ -1,10 +1,9 @@
 import React from 'react';
-import NavBar from './Navbar';
+import BaseLayout from './BaseLayout';
 
 function Contacto() {
   return (
-    <div>
-      <NavBar />
+    <BaseLayout>
       <header className="masthead">
         <div className="container">
           <div className="masthead-heading text-uppercase">Contáctanos</div>
@@ -38,7 +37,7 @@ function Contacto() {
           </div>
         </div>
       </section>
-    </div>
+    </BaseLayout>
   );
 }
 
