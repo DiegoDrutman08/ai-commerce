@@ -3,6 +3,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from . import views
 from .views import categorias, contacto, productos
+from .views import api_login
 
 
 app_name = "core"
@@ -16,6 +17,7 @@ urlpatterns = [
     path('categorias/', categorias, name='categorias'),
     path('productos/<int:producto_id>/', views.productos, name='productos'),
     path('contacto/', contacto, name='contacto'),
+    path('api/login/', api_login, name='api_login'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

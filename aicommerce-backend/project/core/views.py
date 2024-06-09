@@ -1,11 +1,14 @@
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
 from .forms import CustomAuthenticationForm, CustomUserCreationForm, ContactoForm
 from producto.models import Categoria, Producto
 from .models import Contacto
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def home(request):
     return render(request, "core/index.html")
@@ -25,6 +28,23 @@ class CustomLoginView(LoginView):
             return reverse_lazy('producto:home')
         else:
             return super().get_success_url()
+
+@csrf_exempt
+def api_login(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print("Received data:", data)  # Verifica los datos recibidos
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'Login successful'}, status=200)
+        else:
+            print("Invalid credentials for user:", username)  # Verifica el error de autenticación
+            return JsonResponse({'message': 'Invalid credentials'}, status=400)
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
+
         
 def register(request):
     if request.method == "POST":

@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulación de inicio de sesión exitoso
-    // Aquí puedes agregar la lógica de inicio de sesión real
-    // Después de un inicio de sesión exitoso, redirige a la página principal del CRUD
-    setTimeout(() => {
-      navigate('/principal'); // Cambiar a la ruta de la página principal del CRUD
-    }, 1000); // Simulación de retardo de 1 segundo para el inicio de sesión
+    try {
+      const response = await axios.post('http://localhost:8000/api/login/', {
+        username: username,
+        password: password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.status === 200) {
+        navigate('/principal');
+      }
+    } catch (error) {
+      setError('Invalid credentials');
+    }
   };
 
   return (
@@ -28,12 +41,27 @@ function Login() {
                 <div className="col-md-7">
                   <form onSubmit={handleSubmit} className="text-center">
                     <div className="form-group mb-3">
-                      <input type="text" className="form-control" placeholder="Nombre de usuario" required />
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Nombre de usuario"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="form-group mb-3">
-                      <input type="password" className="form-control" placeholder="Contraseña" required />
+                      <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Contraseña"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
                     </div>
-                    <input type="hidden" name="next" value="/principal" /> {/* Cambiar a la ruta de la página principal del CRUD */}
+                    {error && <div className="alert alert-danger">{error}</div>}
+                    <input type="hidden" name="next" value="/principal" />
                     <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
                     <button onClick={() => navigate('/')} className="btn btn-secondary">Cancelar</button>
                   </form>
