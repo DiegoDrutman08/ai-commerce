@@ -1,39 +1,17 @@
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
-from .forms import CustomAuthenticationForm, CustomUserCreationForm, ContactoForm
+from .forms import ContactoForm
 from producto.models import Categoria, Producto
 from .models import Contacto
-from django.contrib import messages
-from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
-def home(request):
-    return render(request, "core/index.html")
-
-class CustomLoginView(LoginView):
-    authentication_form = CustomAuthenticationForm
-    template_name = "core/login.html"
-
-    def form_valid(self, form):
-        # Autenticar al usuario
-        self.user = form.get_user()
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        # Si el usuario no es superadministrador, redirigir a la página de inicio
-        if not self.user.is_superuser:
-            return reverse_lazy('producto:home')
-        else:
-            return super().get_success_url()
+from django.contrib.auth.models import User
 
 @csrf_exempt
 def api_login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print("Received data:", data)  # Verifica los datos recibidos
+        print("Received data:", data)
         username = data.get('username')
         password = data.get('password')
         user = authenticate(request, username=username, password=password)
@@ -41,53 +19,79 @@ def api_login(request):
             login(request, user)
             return JsonResponse({'message': 'Login successful'}, status=200)
         else:
-            print("Invalid credentials for user:", username)  # Verifica el error de autenticación
+            print("Invalid credentials for user:", username)
             return JsonResponse({'message': 'Invalid credentials'}, status=400)
     return JsonResponse({'message': 'Method not allowed'}, status=405)
 
-        
-def register(request):
+@csrf_exempt
+def api_register(request):
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
+        data = json.loads(request.body)
+        username = data.get('username')
+        password1 = data.get('password1')
+        password2 = data.get('password2')
+
+        if password1 != password2:
+            return JsonResponse({'errors': {'password2': 'Passwords do not match'}}, status=400)
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'errors': {'username': 'Username already taken'}}, status=400)
+
+        try:
+            user = User.objects.create_user(username=username, password=password1)
+            user = authenticate(username=username, password=password1)
             if user is not None:
                 login(request, user)
-                return redirect('core:home')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, "core/register.html", {"form": form})
+                return JsonResponse({'message': 'Registration and login successful'}, status=200)
+        except Exception as e:
+            return JsonResponse({'errors': {'detail': str(e)}}, status=400)
+    return JsonResponse({'message': 'Method not allowed'}, status=405)
 
-def about_me(request):
-    return render(request, 'core/about_me.html')
-
-def categorias(request):
+def api_categorias(request):
     categorias = Categoria.objects.all()
     categorias_con_productos = []
+
     for categoria in categorias:
-        productos = Producto.objects.filter(categoria=categoria)
-        categorias_con_productos.append({'categoria': categoria, 'productos': productos})
-    return render(request, 'core/categorias.html', {'categorias_con_productos': categorias_con_productos})
+        productos = list(Producto.objects.filter(categoria=categoria).values())
+        categorias_con_productos.append({'categoria': categoria.nombre, 'productos': productos})
 
-def contacto(request):
+    return JsonResponse(categorias_con_productos, safe=False)
+
+@csrf_exempt
+def api_contacto(request):
     if request.method == 'POST':
-        form = ContactoForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            message = form.cleaned_data['message']
-            
-            Contacto.objects.create(nombre=name, email=email, mensaje=message)
-            
-            messages.success(request, 'Tu mensaje ha sido enviado correctamente. ¡Gracias por contactarnos!')
-            return redirect('core:contacto')  # Redireccionar a la misma página de contacto o a otra página de éxito
-    else:
-        form = ContactoForm()
-    return render(request, 'core/contacto.html', {'form': form})
+        try:
+            data = json.loads(request.body)
+            form = ContactoForm(data)
+            print("Request JSON data:", data)
+            print("Form data:", form.data)
+            print("Form errors:", form.errors)
+            if form.is_valid():
+                # Extraemos los datos del formulario limpios
+                name = form.cleaned_data['name']
+                email = form.cleaned_data['email']
+                subject = form.cleaned_data['subject']
+                message = form.cleaned_data['message']
 
-def productos(request, producto_id):
-    producto = Producto.objects.get(pk=producto_id)
-    return render(request, 'core/productos.html', {'producto': producto})
+                # Creamos un nuevo objeto de Contacto con los datos del formulario
+                contacto = Contacto.objects.create(name=name, email=email, subject=subject, message=message)
+
+                # Podemos devolver el ID del contacto creado si es necesario
+                return JsonResponse({'success': True, 'message': 'Tu mensaje ha sido enviado correctamente. ¡Gracias por contactarnos!', 'contacto_id': contacto.id})
+            else:
+                # Si el formulario no es válido, devolvemos los errores de validación
+                errors = dict(form.errors.items())  # Convertimos los errores del formulario en un diccionario para JSON
+                return JsonResponse({'success': False, 'errors': errors}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON'}, status=400)
+    else:
+        # Si no es una solicitud POST, devolvemos un error de método no permitido
+        return JsonResponse({}, status=405)
+
+    
+def api_producto(request, producto_id):
+    try:
+        producto = Producto.objects.get(pk=producto_id)
+        return JsonResponse({'success': True, 'producto': {'id': producto.id, 'nombre': producto.nombre, 'descripcion': producto.descripcion, 'imagen': producto.imagen}})
+    except Producto.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'El producto no existe'}, status=404)

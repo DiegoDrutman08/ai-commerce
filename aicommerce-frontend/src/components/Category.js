@@ -15,14 +15,14 @@ function Categorias({ categoriasConProductos }) {
           <div className="row">
             {categoriasConProductos ? (
               categoriasConProductos.map(categoria => (
-                <div className="col-lg-4 col-md-6 mb-4" key={categoria.id}>
+                <div className="col-lg-4 col-md-6 mb-4" key={categoria.categoria}>
                   <div className="card h-100">
                     <div className="card-body">
-                      <h3 className="card-title">{categoria.nombre}</h3>
+                      <h3 className="card-title">{categoria.categoria}</h3>
                       {categoria.productos.length > 0 ? (
                         categoria.productos.map(producto => (
                           <div className="card mb-2" key={producto.id}>
-                            <img src={producto.imagen.url} alt={producto.nombre} className="card-img-top" />
+                            <img src={producto.imagen} alt={producto.nombre} className="card-img-top" />
                             <div className="card-body">
                               <h5 className="card-title">{producto.nombre}</h5>
                               <p className="card-text">$ {producto.precio}</p>

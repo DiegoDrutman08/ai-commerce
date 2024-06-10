@@ -1,9 +1,10 @@
 from django.db import models
-    
+
 class Contacto(models.Model):
-    nombre = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     email = models.EmailField()
-    mensaje = models.TextField()
+    subject = models.CharField(max_length=500, default="Default Subject")
+    message = models.TextField()
 
     def __str__(self):
-        return self.nombre
+        return self.name

@@ -1,74 +1,71 @@
-from django.db.models.query import QuerySet
-from django.shortcuts import render,redirect
+from django.http import JsonResponse
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from . import forms, models
-from .forms import InformacionContactoForm
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-)
+from .models import Categoria, Producto
 
-def home(request):
-    return render(request, "producto/index.html")
-
+# Vistas para categorías
 class CategoriaList(ListView):
-    model = models.Categoria
+    model = Categoria
 
-    def get_queryset(self) -> QuerySet:
-        if self.request.GET.get("consulta"):
-            consulta = self.request.GET.get("consulta")
-            object_list = models.Categoria.objects.filter(nombre__icontains=consulta)
-        else:
-            object_list = models.Categoria.objects.all()
-        return object_list
-
-class CategoriaCreate(CreateView):
-    model = models.Categoria
-    form_class = forms.CategoriaForm
-    success_url = reverse_lazy("producto:home")
-
-class CategoriaUpdate(UpdateView):
-    model = models.Categoria
-    form_class = forms.CategoriaForm
-    success_url = reverse_lazy("producto:categoria_list")
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return list(queryset.values())
 
 class CategoriaDetail(DetailView):
-    model = models.Categoria
+    model = Categoria
+
+    def get_object(self):
+        obj = super().get_object()
+        return {
+            'id': obj.id,
+            'nombre': obj.nombre,
+            # Agrega más campos según sea necesario
+        }
+
+class CategoriaCreate(CreateView):
+    model = Categoria
+    fields = ['nombre']  # Agrega los campos necesarios
+    success_url = reverse_lazy('categoria-list')
+
+class CategoriaUpdate(UpdateView):
+    model = Categoria
+    fields = ['nombre']  # Agrega los campos necesarios
+    success_url = reverse_lazy('categoria-list')
 
 class CategoriaDelete(DeleteView):
-    model = models.Categoria
-    success_url = reverse_lazy("producto:categoria_list")
+    model = Categoria
+    success_url = reverse_lazy('categoria-list')
 
+# Vistas para productos
 class ProductoList(ListView):
-    model = models.Producto
+    model = Producto
 
-    def get_queryset(self) -> QuerySet:
-        if self.request.GET.get("consulta"):
-            consulta = self.request.GET.get("consulta")
-            object_list = models.Producto.objects.filter(nombre__icontains=consulta)
-        else:
-            object_list = models.Producto.objects.all()
-        return object_list
-
-class ProductoCreate(CreateView):
-    model = models.Producto
-    form_class = forms.ProductoForm
-    success_url = reverse_lazy("producto:home")
-
-
-class ProductoUpdate(UpdateView):
-    model = models.Producto
-    form_class = forms.ProductoForm
-    success_url = reverse_lazy("producto:producto_list")
-
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return list(queryset.values())
 
 class ProductoDetail(DetailView):
-    model = models.Producto
+    model = Producto
 
+    def get_object(self):
+        obj = super().get_object()
+        return {
+            'id': obj.id,
+            'nombre': obj.nombre,
+            # Agrega más campos según sea necesario
+        }
+
+class ProductoCreate(CreateView):
+    model = Producto
+    fields = ['nombre']  # Agrega los campos necesarios
+    success_url = reverse_lazy('producto-list')
+
+class ProductoUpdate(UpdateView):
+    model = Producto
+    fields = ['nombre']  # Agrega los campos necesarios
+    success_url = reverse_lazy('producto-list')
 
 class ProductoDelete(DeleteView):
-    model = models.Producto
-    success_url = reverse_lazy("producto:producto_list")
+    model = Producto
+    success_url = reverse_lazy('producto-list')
