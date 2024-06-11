@@ -56,7 +56,7 @@ function MainApp() {
         <Route path="/editarproducto" element={<EditarProducto />} />
         <Route path="/editarcategoria" element={<EditarCategoria />} />
         <Route path="/eliminarproducto" element={<EliminarProducto />} />
-        <Route path="/eliminarcategoria" element={<EliminarCategoria />} />
+        <Route path="/producto/categoria/delete/:id" component={EliminarCategoria} />
       </Routes>
     </div>
   );

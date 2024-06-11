@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import BaseLayout from './BaseLayoutC';
+import BaseLayout from './BaseLayoutC'; // Asegúrate de que las importaciones necesarias estén intactas
 
-function ListaCategoria({ categorias }) {
+function ListaCategoria() {
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/producto/categoria/list/')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.categorias);
+        const categorias = JSON.parse(data.categorias);
+        setCategorias(categorias);
+      })
+      .catch(error => console.error('Error fetching categories:', error));
+  }, []);
+
   return (
     <BaseLayout>
       <header className="masthead">
@@ -23,14 +36,14 @@ function ListaCategoria({ categorias }) {
             </tr>
           </thead>
           <tbody>
-            {categorias ? (
+            {categorias.length > 0 ? (
               categorias.map(categoria => (
-                <tr key={categoria.id}>
-                  <td style={{ fontSize: '24px' }}>{categoria.nombre}</td>
+                <tr key={categoria.pk}>
+                  <td style={{ fontSize: '24px' }}>{categoria.fields.nombre}</td>
                   <td>
-                    <Link className="btn btn-info btn-lg me-1" to={`/categorias/${categoria.id}`}>Detalle</Link>
-                    <Link className="btn btn-warning btn-lg me-1" to={`/categorias/${categoria.id}/editar`}>Editar</Link>
-                    <Link className="btn btn-danger btn-lg" to={`/categorias/${categoria.id}/borrar`}>Borrar</Link>
+                    <Link className="btn btn-info btn-lg me-1" to={`producto/categoria/detail/${categoria.pk}/`}>Detalle</Link>
+                    <Link className="btn btn-warning btn-lg me-1" to={`producto/categoria/update/${categoria.pk}/`}>Editar</Link>
+                    <Link className="btn btn-danger btn-lg" to={`/producto/categoria/delete/${categoria.pk}/`}>Borrar</Link>
                   </td>
                 </tr>
               ))

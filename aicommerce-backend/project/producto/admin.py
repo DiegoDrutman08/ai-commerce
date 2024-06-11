@@ -12,8 +12,6 @@ class ProductoAdmin(admin.ModelAdmin):
     list_display = (
         "categoria_id",
         "nombre",
-        "telefono",
-        "email",
         "descripcion",
         "fecha_actualizacion",
     )

@@ -1,8 +1,78 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+// Importar useEffect para realizar efectos secundarios
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import BaseLayout from './BaseLayoutC';
+import Cookies from 'js-cookie';
 
 function FormularioProducto({ form }) {
+  const [nombre, setNombre] = useState(form?.instance?.nombre || '');
+  const [descripcion, setDescripcion] = useState(form?.instance?.descripcion || '');
+  const [categoria, setCategoria] = useState(form?.instance?.categoria || '');
+  const [precio, setPrecio] = useState(form?.instance?.precio || '');
+  const [stock, setStock] = useState(form?.instance?.stock || '');
+  const [imagen, setImagen] = useState(null);
+  const [categorias, setCategorias] = useState([]); // Estado para almacenar las categorías
+  const navigate = useNavigate();
+
+  // Función para cargar las categorías desde el backend
+  const cargarCategorias = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/producto/categoria/list/');
+      if (response.ok) {
+        const data = await response.json();
+        const categoriasJSON = JSON.parse(data.categorias); // Convertir la cadena JSON en un objeto JSON
+        setCategorias(categoriasJSON);
+      } else {
+        console.error('Error al cargar las categorías');
+      }
+    } catch (error) {
+      console.error('Error al cargar las categorías:', error);
+    }
+  };
+
+  // Cargar las categorías al cargar el componente
+  useEffect(() => {
+    cargarCategorias();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Obtener el token CSRF de la cookie
+      const csrfToken = Cookies.get('csrftoken');
+
+      // Construir un FormData object para enviar los datos del formulario, incluyendo la imagen
+      const formData = new FormData();
+      formData.append('nombre', nombre);
+      formData.append('descripcion', descripcion);
+      formData.append('categoria', categoria);
+      formData.append('precio', precio);
+      formData.append('stock', stock);
+      formData.append('imagen', imagen);
+
+      // Incluir el token CSRF en el encabezado de la solicitud POST
+      const response = await fetch('http://127.0.0.1:8000/producto/producto/create/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('Producto creado exitosamente');
+        navigate('/productos');
+      } else {
+        console.error('Error al crear el producto');
+        // Manejar el error de acuerdo a tus necesidades
+      }
+    } catch (error) {
+      console.error('Error al enviar los datos:', error);
+      // Manejar el error de acuerdo a tus necesidades
+    }
+  };
+
   return (
     <BaseLayout>
       <header className="masthead">
@@ -12,7 +82,7 @@ function FormularioProducto({ form }) {
         </div>
       </header>
       <div className="container my-5">
-        <form method="post" encType="multipart/form-data">
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <h1 style={{ fontSize: '30px' }}>
             {form?.instance?.pk ? 'Editar' : 'Crear'} Producto
           </h1>
@@ -23,8 +93,8 @@ function FormularioProducto({ form }) {
               className="form-control"
               id="nombre"
               name="nombre"
-              value={form?.instance?.nombre}
-              onChange={(e) => console.log(e.target.value)}
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -33,8 +103,8 @@ function FormularioProducto({ form }) {
               className="form-control"
               id="descripcion"
               name="descripcion"
-              value={form?.instance?.descripcion}
-              onChange={(e) => console.log(e.target.value)}
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
             ></textarea>
           </div>
           <div className="form-group">
@@ -43,14 +113,15 @@ function FormularioProducto({ form }) {
               className="form-control"
               id="categoria"
               name="categoria"
-              value={form?.instance?.categoria}
-              onChange={(e) => console.log(e.target.value)}
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
             >
-              {/* Opciones de categoría */}
-              {form?.instance?.categoria && (
-                <option value={form?.instance?.categoria}>{form?.instance?.categoria}</option>
-              )}
-              {/* Aquí deberías cargar las opciones de categoría desde tu backend */}
+              <option value="">Seleccionar categoría</option>
+              {categorias.map((categoria) => (
+                <option key={categoria.pk} value={categoria.pk}>
+                  {categoria.fields.nombre}
+                </option>
+              ))}
             </select>
           </div>
           <div className="form-group">
@@ -60,8 +131,8 @@ function FormularioProducto({ form }) {
               className="form-control"
               id="precio"
               name="precio"
-              value={form?.instance?.precio}
-              onChange={(e) => console.log(e.target.value)}
+              value={precio}
+              onChange={(e) => setPrecio(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -71,8 +142,8 @@ function FormularioProducto({ form }) {
               className="form-control"
               id="stock"
               name="stock"
-              value={form?.instance?.stock}
-              onChange={(e) => console.log(e.target.value)}
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -83,7 +154,7 @@ function FormularioProducto({ form }) {
                 className="form-control-file"
                 id="imagen"
                 name="imagen"
-                onChange={(e) => console.log(e.target.files[0])}
+                onChange={(e) => setImagen(e.target.files[0])}
               />
             </div>
           </div>
