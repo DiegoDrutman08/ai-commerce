@@ -76,18 +76,17 @@ def eliminar_categoria(request, pk):
 def crear_producto(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            nombre = data.get('nombre')
-            descripcion = data.get('descripcion')
-            categoria_id = data.get('categoria')
-            precio = data.get('precio')
-            stock = data.get('stock')
+            nombre = request.POST.get('nombre')
+            descripcion = request.POST.get('descripcion')
+            categoria_id = request.POST.get('categoria')
+            precio = request.POST.get('precio')
+            stock = request.POST.get('stock')
             imagen = request.FILES.get('imagen')
 
-            # Obtenemos la categoría
+            # Obtener la categoría
             categoria = Categoria.objects.get(id=categoria_id)
 
-            # Creamos el producto con los datos proporcionados
+            # Crear el producto con los datos proporcionados
             nuevo_producto = Producto.objects.create(
                 nombre=nombre,
                 descripcion=descripcion,
@@ -98,6 +97,8 @@ def crear_producto(request):
             )
 
             return JsonResponse({'mensaje': 'Producto creado exitosamente'}, status=201)
+        except Categoria.DoesNotExist:
+            return JsonResponse({'error': 'Categoría no encontrada'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     else:
@@ -107,9 +108,10 @@ def crear_producto(request):
 def lista_productos(request):
     if request.method == 'GET':
         queryset = Producto.objects.all().values()
-        return JsonResponse(list(queryset), safe=False)
+        return JsonResponse({'productos': list(queryset)}, safe=False)
     else:
         return JsonResponse({'mensaje': 'Solo se admiten solicitudes GET'}, status=405)
+
 
 def detalle_producto(request, pk):
     if request.method == 'GET':

@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import BaseLayout from './BaseLayoutC';
+import BaseLayout from './BaseLayoutC'; // Asegúrate de que las importaciones necesarias estén intactas
 
-function ListaProductos({ productos }) {
+function ListaProductos() {
+  const [productos, setProductos] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/producto/producto/list/')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Respuesta de la API:', data); // Verificar la respuesta de la API
+        console.log('Productos:', data.productos); // Verificar los productos específicamente
+        setProductos(data.productos || []); // Asegurarse de que productos sea un array o inicializarlo como array vacío si es undefined
+      })
+      .catch(error => console.error('Error fetching products:', error));
+  }, []);
+
   return (
     <BaseLayout>
       <header className="masthead">
@@ -25,7 +38,7 @@ function ListaProductos({ productos }) {
             </tr>
           </thead>
           <tbody>
-            {productos ? (
+            {productos && productos.length > 0 ? (
               productos.map(producto => (
                 <tr key={producto.id}>
                   <td style={{ fontSize: '24px' }}>{producto.nombre}</td>
@@ -36,6 +49,7 @@ function ListaProductos({ productos }) {
                   </td>
                 </tr>
               ))
+
             ) : (
               <tr>
                 <td colSpan="2">No hay productos disponibles</td>

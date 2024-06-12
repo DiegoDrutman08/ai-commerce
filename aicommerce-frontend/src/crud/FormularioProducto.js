@@ -37,21 +37,22 @@ function FormularioProducto({ form }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // Obtener el token CSRF de la cookie
       const csrfToken = Cookies.get('csrftoken');
-
-      // Construir un FormData object para enviar los datos del formulario, incluyendo la imagen
+  
       const formData = new FormData();
       formData.append('nombre', nombre);
       formData.append('descripcion', descripcion);
       formData.append('categoria', categoria);
       formData.append('precio', precio);
       formData.append('stock', stock);
-      formData.append('imagen', imagen);
-
-      // Incluir el token CSRF en el encabezado de la solicitud POST
+      
+      // Agregar verificación de imagen antes de agregarla al formData
+      if (imagen) {
+        formData.append('imagen', imagen);
+      }
+  
       const response = await fetch('http://127.0.0.1:8000/producto/producto/create/', {
         method: 'POST',
         headers: {
@@ -59,19 +60,17 @@ function FormularioProducto({ form }) {
         },
         body: formData,
       });
-
+  
       if (response.ok) {
         console.log('Producto creado exitosamente');
-        navigate('/productos');
+        navigate('/listaproductos');
       } else {
         console.error('Error al crear el producto');
-        // Manejar el error de acuerdo a tus necesidades
       }
     } catch (error) {
       console.error('Error al enviar los datos:', error);
-      // Manejar el error de acuerdo a tus necesidades
     }
-  };
+  };  
 
   return (
     <BaseLayout>
