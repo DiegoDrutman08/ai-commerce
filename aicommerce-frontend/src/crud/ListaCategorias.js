@@ -41,8 +41,8 @@ function ListaCategoria() {
                 <tr key={categoria.pk}>
                   <td style={{ fontSize: '24px' }}>{categoria.fields.nombre}</td>
                   <td>
-                    <Link className="btn btn-info btn-lg me-1" to={`producto/categoria/detail/${categoria.pk}/`}>Detalle</Link>
-                    <Link className="btn btn-warning btn-lg me-1" to={`producto/categoria/update/${categoria.pk}/`}>Editar</Link>
+                   <Link className="btn btn-info btn-lg me-1" to={`/producto/categoria/detail/${categoria.pk}/`}>Detalle</Link>
+                    <Link className="btn btn-warning btn-lg me-1" to={`/producto/categoria/update/${categoria.pk}/`}>Editar</Link>
                     <Link className="btn btn-danger btn-lg" to={`/producto/categoria/delete/${categoria.pk}/`}>Borrar</Link>
                   </td>
                 </tr>

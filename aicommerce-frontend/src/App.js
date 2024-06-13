@@ -51,8 +51,8 @@ function MainApp() {
         <Route path="/formulariocategoria" element={<FormularioCategoria />} />
         <Route path="/listaproductos" element={<ListaProductos />} />
         <Route path="/listacategorias" element={<ListaCategorias />} />
-        <Route path="/detalleproducto" element={<DetalleProducto />} />
-        <Route path="/detallecategoria" element={<DetalleCategoria />} />
+        <Route path="/producto/producto/detail/:productoId" element={<DetalleProducto />}/>
+        <Route path="/producto/categoria/detail/:categoriaId" element={<DetalleCategoria />}/>
         <Route path="/editarproducto" element={<EditarProducto />} />
         <Route path="/editarcategoria" element={<EditarCategoria />} />
         <Route path="/eliminarproducto" element={<EliminarProducto />} />

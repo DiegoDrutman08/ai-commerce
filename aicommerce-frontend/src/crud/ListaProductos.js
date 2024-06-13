@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import BaseLayout from './BaseLayoutC'; // Asegúrate de que las importaciones necesarias estén intactas
+import BaseLayout from './BaseLayoutC';
 
 function ListaProductos() {
   const [productos, setProductos] = useState([]);
@@ -20,7 +20,7 @@ function ListaProductos() {
     <BaseLayout>
       <header className="masthead">
         <div className="container">
-          <div className="masthead-subheading">Crealos, editalos o borralos por categorías</div>
+          <div className="masthead-subheading">Crealos, edítalos o borralos por categorías</div>
           <h1 className="masthead-heading text-uppercase">Productos</h1>
         </div>
       </header>
@@ -40,16 +40,15 @@ function ListaProductos() {
           <tbody>
             {productos && productos.length > 0 ? (
               productos.map(producto => (
-                <tr key={producto.id}>
+                <tr key={producto.pk}>
                   <td style={{ fontSize: '24px' }}>{producto.nombre}</td>
                   <td>
-                    <Link className="btn btn-info btn-lg me-1" to={`/producto/producto_detail/${producto.id}`}>Detalle</Link>
-                    <Link className="btn btn-warning btn-lg me-1" to={`/producto/producto_update/${producto.id}`}>Cambiar</Link>
-                    <Link className="btn btn-danger btn-lg" to={`/producto/producto_delete/${producto.id}`}>Borrar</Link>
+                    <Link className="btn btn-info btn-lg me-1" to={`/producto/producto/detail/${producto.pk}`}>Detalle</Link>
+                    <Link className="btn btn-warning btn-lg me-1" to={`/producto/producto/update/${producto.pk}`}>Cambiar</Link>
+                    <Link className="btn btn-danger btn-lg" to={`/producto/producto/delete/${producto.pk}`}>Borrar</Link>
                   </td>
                 </tr>
               ))
-
             ) : (
               <tr>
                 <td colSpan="2">No hay productos disponibles</td>
